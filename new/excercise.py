@@ -1,15 +1,17 @@
-from calculate_one_fibonacci import Fibonacci
+from  modules.calculate_one_fibonacci import Fibonacci
+from modules.save import Save
 
 class Excercise():
 
     def __init__(self):
         self.calculate_one_instance = Fibonacci()
-        self.save = False
+        self.save_status = False
         self.m_mode = ''
-        estados = {
-            '-m=s': 'Sumador',
+        self.save = Save()
+        self.file = ''
+        self.result = ''
 
-        }
+        
 
     # busco en el estado con el input
     # estados.get('-m=s') => instancia
@@ -19,6 +21,9 @@ class Excercise():
     # cuando aparezcan nuevos parametros
 
     def fibonacci(self, input:str):
+        if '-f' in input:
+            self.save_status = True            
+            self.file = input[(input.index('-f')+3):(input.index('-f')+13)]        
         # chequeo que tenga modo
         if '-m' in input:
             self.m_mode = input[(input.index('-m')+3)]
@@ -29,13 +34,14 @@ class Excercise():
 
             # si el modo es s, sumo el array de fibonaccis
             if self.m_mode == 's':
-                self.print_sum(fibonacci_array)
+                self.result = self.print_sum(fibonacci_array)
             else:
                 direction_char = input[(input.index('-o')+4)]
                 orientation_char = input[(input.index('-o')+3)]
                 directed_fibonacci_array = self.modify_by_direction(fibonacci_array, direction_char)
                 self.print_by_orientation(directed_fibonacci_array, orientation_char)
-
+            if self.save_status == True:
+                self.save.save_in_file(self.file, self.result)
         else:
             print('Entrada Invalida')
 
@@ -64,4 +70,6 @@ class Excercise():
             for i in array: print(i)
 
     def print_sum(self,array):
-        print(sum(array))
+        suma = sum(array)     
+        print(suma)
+        return str(suma)
